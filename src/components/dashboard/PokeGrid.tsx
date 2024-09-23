@@ -3,13 +3,14 @@ import fetchPokeURLs, { PokeURLsData } from "@/lib/fetchPokeURLs";
 import { FetchState } from "@/models/types";
 import { useEffect, useState } from "react";
 import { PokeCard } from "./PokeCard";
+import { PokeTypeData } from "@/lib/fetchPokeTypes";
 
 type PokeGridProps = {
-  typesimgURL: string[];
+  pokeTypesData: PokeTypeData[];
   page: number;
 };
 
-export default function PokeGrid({ typesimgURL, page }: Readonly<PokeGridProps>) {
+export default function PokeGrid({ pokeTypesData: pokeTypesData, page }: Readonly<PokeGridProps>) {
   const [pokeURLs, setPokeURLs] = useState<PokeURLsData | null>(null);
 
   const [fetchState, setFetchState] = useState<FetchState>("pending");
@@ -38,9 +39,10 @@ export default function PokeGrid({ typesimgURL, page }: Readonly<PokeGridProps>)
       <div className="grid grid-cols-5">
         {pokeURLs?.results.map((poke, index) => (
           <PokeCard
+            className="max-w-[232px]"
             url={poke.url}
             key={index + page * 20 + 1}
-            typesimgURL={typesimgURL}
+            pokeTypesData={pokeTypesData}
           />
         ))}
       </div>

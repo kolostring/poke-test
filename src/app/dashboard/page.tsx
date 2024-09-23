@@ -1,7 +1,7 @@
 "use client";
 
 import PokeGrid from "@/components/dashboard/PokeGrid";
-import fetchPokeTypesImages from "@/lib/fetchPokeTypesImages";
+import fetchPokeTypes, { PokeTypeData } from "@/lib/fetchPokeTypes";
 import { FetchState } from "@/models/types";
 import { useEffect, useState } from "react";
 
@@ -19,16 +19,16 @@ import fetchPokeURLs from "@/lib/fetchPokeURLs";
 export default function DashboardPage() {
   const [page, setPage] = useState(0);
   const [itemsCount, setItemsCount] = useState(0);
-  const [typesimgURL, setTypesimgURL] = useState<string[]>([]);
+  const [pokeTypesData, setPokeTypesData] = useState<PokeTypeData[]>([]);
 
   const [fetchState, setFetchState] = useState<FetchState>("pending");
 
   useEffect(() => {
     setFetchState("pending");
-    Promise.all([fetchPokeURLs(0, 20), fetchPokeTypesImages()])
-      .then(([pokeurls, pokeTypesImages]) => {
+    Promise.all([fetchPokeURLs(0, 20), fetchPokeTypes()])
+      .then(([pokeurls, typesdata]) => {
         setItemsCount(pokeurls.count);
-        setTypesimgURL(pokeTypesImages);
+        setPokeTypesData(typesdata);
         setFetchState("success");
       })
       .catch((reason) => {
@@ -80,7 +80,7 @@ export default function DashboardPage() {
             </PaginationContent>
           </Pagination>
 
-          <PokeGrid page={page} typesimgURL={typesimgURL} />
+          <PokeGrid page={page} pokeTypesData={pokeTypesData} />
         </section>
       </main>
     );
