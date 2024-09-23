@@ -3,6 +3,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -12,41 +13,57 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type PokeCardProps = {
-  id: number;
+  url: string;
   typesimgURL: string[];
 };
 
-export function PokeCard({ id, typesimgURL, ...props }: Readonly<PokeCardProps>) {
+export function PokeCard({
+  url,
+  typesimgURL,
+  ...props
+}: Readonly<PokeCardProps>) {
   const [pokeInfo, setPokeInfo] = useState<PokemonInfo | null>(null);
   const [fetchState, setFetchState] = useState<FetchState>("pending");
 
   useEffect(() => {
     setFetchState("pending");
+    const controller = new AbortController();
 
-    fetchPokemon(id + "")
+    fetchPokemon(url, controller.signal)
       .then((res) => {
         setPokeInfo(res);
         setFetchState("success");
       })
       .catch((reason) => {
-        console.log(reason);
+        if (!controller.signal.aborted) {
+          setFetchState("error");
+          console.log(reason);
+        }
       });
-  }, [id]);
+
+    return () => {
+      setFetchState("pending");
+      controller.abort();
+    };
+  }, [url]);
 
   if (fetchState === "pending") {
-    return <>Loading...</>;
+    return <div className="bg-yellow-300">Loading... Card</div>;
   }
 
   if (fetchState === "error") {
-    return <>Couldnt load</>;
+    return <div className="bg-red-600">Couldnt load</div>;
   }
 
   if (fetchState === "success") {
+    const id = pokeInfo?.id ?? undefined;
     const name = pokeInfo?.name ?? "undefined";
-    const pokeimgURL = pokeInfo?.sprites.front_default ?? "undefined";
+    const pokeimgURL = pokeInfo?.sprites.front_default ?? "";
     const height = pokeInfo?.height ?? "undefined";
     const weight = pokeInfo?.weight ?? "undefined";
-    const types = pokeInfo?.types.map((item) => item.type.name) ?? ["undefined"];
+    const types = pokeInfo?.types.map((item) => item.type.name) ?? [
+      "undefined",
+    ];
 
     return (
       <Card {...props}>
@@ -59,15 +76,22 @@ export function PokeCard({ id, typesimgURL, ...props }: Readonly<PokeCardProps>)
             className="h-full w-full"
           />
           <CardTitle className="capitalize">{name}</CardTitle>
+          <CardDescription>{id}</CardDescription>
         </CardHeader>
         <CardContent>
           <ul className="grid grid-cols-5">
-          {types.map((type, index) => (
-            <li key={type}>
-              <Image src={typesimgURL[index]} alt={type} width={20} height={20} className="w-full h-full" />
-            </li>
-          ))}
-        </ul>
+            {types.map((type, index) => (
+              <li key={type}>
+                <Image
+                  src={typesimgURL[index]}
+                  alt={type}
+                  width={20}
+                  height={20}
+                  className="h-full w-full"
+                />
+              </li>
+            ))}
+          </ul>
 
           <p>{height} dm</p>
           <p>{weight} hg</p>

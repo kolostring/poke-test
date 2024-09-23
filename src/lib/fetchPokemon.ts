@@ -9,8 +9,9 @@ export type PokemonInfo = {
   types: { slot: number; type: { name: string } }[];
 };
 
-export default async function fetchPokemon(id: string) {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+
+export default async function fetchPokemon(url: string, abortSignal: AbortSignal) {
+  const res = await fetch(url, {signal: abortSignal});
   const pokemon = await res.json();
 
   return pokemon as PokemonInfo;

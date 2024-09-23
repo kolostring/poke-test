@@ -1,6 +1,10 @@
 "use client";
 
-import { PokeCard } from "@/components/dashboard/PokeCard";
+import PokeGrid from "@/components/dashboard/PokeGrid";
+import fetchPokeTypesImages from "@/lib/fetchPokeTypesImages";
+import { FetchState } from "@/models/types";
+import { useEffect, useState } from "react";
+
 import {
   Pagination,
   PaginationContent,
@@ -10,22 +14,20 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import fetchPokeCount from "@/lib/fetchPokeCount";
-import fetchPokeTypesImages from "@/lib/fetchPokeTypesImages";
-import { FetchState } from "@/models/types";
-import { useEffect, useRef, useState } from "react";
+import fetchPokeURLs from "@/lib/fetchPokeURLs";
 
 export default function DashboardPage() {
-  const [typesimgURL, setTypesimgURL] = useState<string[]>([]);
-  const [fetchState, setFetchState] = useState<FetchState>("pending");
   const [page, setPage] = useState(0);
-  const pokeCount = useRef<number>(200);
+  const [itemsCount, setItemsCount] = useState(0);
+  const [typesimgURL, setTypesimgURL] = useState<string[]>([]);
+
+  const [fetchState, setFetchState] = useState<FetchState>("pending");
 
   useEffect(() => {
     setFetchState("pending");
-    Promise.all([fetchPokeCount(), fetchPokeTypesImages()])
-      .then(([n, pokeTypesImages]) => {
-        pokeCount.current = n;
+    Promise.all([fetchPokeURLs(0, 20), fetchPokeTypesImages()])
+      .then(([pokeurls, pokeTypesImages]) => {
+        setItemsCount(pokeurls.count);
         setTypesimgURL(pokeTypesImages);
         setFetchState("success");
       })
@@ -36,9 +38,7 @@ export default function DashboardPage() {
   }, []);
 
   const handlePaginationChange = (delta: number) => {
-    setPage(
-      Math.min(Math.max(0, page + delta), Math.floor(pokeCount.current / 20)),
-    );
+    setPage(Math.min(Math.max(0, page + delta), Math.floor(itemsCount / 20)));
   };
 
   if (fetchState === "pending") {
@@ -50,41 +50,38 @@ export default function DashboardPage() {
   if (fetchState === "success") {
     return (
       <main>
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious onClick={() => handlePaginationChange(-3)} />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink onClick={() => handlePaginationChange(-1)}>
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink isActive>{page + 1}</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink onClick={() => handlePaginationChange(1)}>
-                {page + 2}
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext onClick={() => handlePaginationChange(3)} />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-        <div className="grid grid-cols-5">
-          {[...Array(20)].map((_, index) => (
-            <PokeCard
-              id={index + page * 20 + 1}
-              key={index + page * 20 + 1}
-              typesimgURL={typesimgURL}
-            />
-          ))}
-        </div>
+        <section className="h-full w-full">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePaginationChange(-3)}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink onClick={() => handlePaginationChange(-1)}>
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink isActive>{page + 1}</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink onClick={() => handlePaginationChange(1)}>
+                  {page + 2}
+                </PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext onClick={() => handlePaginationChange(3)} />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+
+          <PokeGrid page={page} typesimgURL={typesimgURL} />
+        </section>
       </main>
     );
   }
