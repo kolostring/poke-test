@@ -52,31 +52,58 @@ export default function DashboardPage() {
       <main>
         <section className="h-full w-full bg-zinc-50">
           <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePaginationChange(-3)}
-                />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink onClick={() => handlePaginationChange(-1)}>
-                  {page}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
+            <PaginationContent className="grid grid-cols-[100px_2rem_2rem_2rem_2rem_2rem_100px]">
+              {page - 1 >= 0 ? (
+                <PaginationItem className="cursor-pointer">
+                  <PaginationPrevious
+                    onClick={() => handlePaginationChange(-3)}
+                  />
+                </PaginationItem>
+              ) : (
+                <span></span>
+              )}
+              {page - 1 > 0 ? (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                <span></span>
+              )}
+              {page - 1 >= 0 ? (
+                <PaginationItem className="cursor-pointer">
+                  <PaginationLink onClick={() => handlePaginationChange(-1)}>
+                    {page}
+                  </PaginationLink>
+                </PaginationItem>
+              ) : (
+                <span></span>
+              )}
+              <PaginationItem className="cursor-pointer">
                 <PaginationLink isActive>{page + 1}</PaginationLink>
               </PaginationItem>
-              <PaginationItem>
-                <PaginationLink onClick={() => handlePaginationChange(1)}>
-                  {page + 2}
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext onClick={() => handlePaginationChange(3)} />
-              </PaginationItem>
+              {page + 1 <= itemsCount / 20 ? (
+                <PaginationItem className="cursor-pointer">
+                  <PaginationLink onClick={() => handlePaginationChange(1)}>
+                    {page + 2}
+                  </PaginationLink>
+                </PaginationItem>
+              ) : (
+                <span></span>
+              )}
+              {page + 2 <= itemsCount / 20 ? (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              ) : (
+                <span></span>
+              )}
+              {page + 1 <= itemsCount / 20 ? (
+                <PaginationItem className="cursor-pointer">
+                  <PaginationNext onClick={() => handlePaginationChange(3)} />
+                </PaginationItem>
+              ) : (
+                <span></span>
+              )}
             </PaginationContent>
           </Pagination>
 
