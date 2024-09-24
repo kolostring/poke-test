@@ -18,6 +18,8 @@ import fetchPokeURLs from "@/lib/fetchPokeURLs";
 import { useSearchParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import PokeGridSkeleton from "@/components/dashboard/PokeGridSkeleton";
+import { Button } from "@/components/ui/button";
+import { logout } from "../actions/auth";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
@@ -57,7 +59,7 @@ export default function DashboardPage() {
     return (
       <main className="bg-zinc-700">
         <section className="bg-display h-dvh">
-          <Skeleton className="mx-auto h-[68px] w-[448px] rounded-b-full bg-white mb-8" />
+          <Skeleton className="mx-auto mb-8 h-[68px] w-[448px] rounded-b-full bg-white" />
           <PokeGridSkeleton />
         </section>
       </main>
@@ -69,77 +71,90 @@ export default function DashboardPage() {
   }
   if (fetchState === "success") {
     return (
-      <main className="bg-zinc-700">
-        <section className="bg-display h-full w-full">
-          <Pagination className="sticky top-0 z-50 mx-auto mb-8 w-fit rounded-b-full bg-white px-8 py-4">
-            <PaginationContent className="grid grid-cols-[100px_2rem_2rem_2rem_2rem_2rem_100px]">
-              {page - 1 >= 0 ? (
+      <>
+        <aside className="fixed right-0 top-0">
+          <Button
+            variant={"secondary"}
+            className="m-4"
+            onClick={() => {
+              logout();
+            }}
+          >
+            Log out
+          </Button>
+        </aside>
+        <main className="bg-zinc-700">
+          <section className="bg-display h-full w-full">
+            <Pagination className="sticky top-0 z-50 mx-auto mb-8 w-fit rounded-b-full bg-white px-8 py-4">
+              <PaginationContent className="grid grid-cols-[100px_2rem_2rem_2rem_2rem_2rem_100px]">
+                {page - 1 >= 0 ? (
+                  <PaginationItem className="cursor-pointer">
+                    <PaginationPrevious
+                      //onClick={() => handlePaginationChange(-3)}
+                      href={`/dashboard/?page=${getNewPagination(-1)}`}
+                    />
+                  </PaginationItem>
+                ) : (
+                  <span></span>
+                )}
+                {page - 1 > 0 ? (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <span></span>
+                )}
+                {page - 1 >= 0 ? (
+                  <PaginationItem className="cursor-pointer">
+                    <PaginationLink
+                      //onClick={() => handlePaginationChange(-1)}
+                      href={`/dashboard/?page=${getNewPagination(-1)}`}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ) : (
+                  <span></span>
+                )}
                 <PaginationItem className="cursor-pointer">
-                  <PaginationPrevious
-                    //onClick={() => handlePaginationChange(-3)}
-                    href={`/dashboard/?page=${getNewPagination(-1)}`}
-                  />
+                  <PaginationLink isActive>{page + 1}</PaginationLink>
                 </PaginationItem>
-              ) : (
-                <span></span>
-              )}
-              {page - 1 > 0 ? (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              ) : (
-                <span></span>
-              )}
-              {page - 1 >= 0 ? (
-                <PaginationItem className="cursor-pointer">
-                  <PaginationLink
-                    //onClick={() => handlePaginationChange(-1)}
-                    href={`/dashboard/?page=${getNewPagination(-1)}`}
-                  >
-                    {page}
-                  </PaginationLink>
-                </PaginationItem>
-              ) : (
-                <span></span>
-              )}
-              <PaginationItem className="cursor-pointer">
-                <PaginationLink isActive>{page + 1}</PaginationLink>
-              </PaginationItem>
-              {page + 1 <= itemsCount / 20 ? (
-                <PaginationItem className="cursor-pointer">
-                  <PaginationLink
-                    // onClick={() => handlePaginationChange(1)}
-                    href={`/dashboard/?page=${getNewPagination(1)}`}
-                  >
-                    {page + 2}
-                  </PaginationLink>
-                </PaginationItem>
-              ) : (
-                <span></span>
-              )}
-              {page + 2 <= itemsCount / 20 ? (
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-              ) : (
-                <span></span>
-              )}
-              {page + 1 <= itemsCount / 20 ? (
-                <PaginationItem className="cursor-pointer">
-                  <PaginationNext
-                    //onClick={() => handlePaginationChange(3)}
-                    href={`/dashboard/?page=${getNewPagination(1)}`}
-                  />
-                </PaginationItem>
-              ) : (
-                <span></span>
-              )}
-            </PaginationContent>
-          </Pagination>
+                {page + 1 <= itemsCount / 20 ? (
+                  <PaginationItem className="cursor-pointer">
+                    <PaginationLink
+                      // onClick={() => handlePaginationChange(1)}
+                      href={`/dashboard/?page=${getNewPagination(1)}`}
+                    >
+                      {page + 2}
+                    </PaginationLink>
+                  </PaginationItem>
+                ) : (
+                  <span></span>
+                )}
+                {page + 2 <= itemsCount / 20 ? (
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                ) : (
+                  <span></span>
+                )}
+                {page + 1 <= itemsCount / 20 ? (
+                  <PaginationItem className="cursor-pointer">
+                    <PaginationNext
+                      //onClick={() => handlePaginationChange(3)}
+                      href={`/dashboard/?page=${getNewPagination(1)}`}
+                    />
+                  </PaginationItem>
+                ) : (
+                  <span></span>
+                )}
+              </PaginationContent>
+            </Pagination>
 
-          <PokeGrid page={page} pokeTypesData={pokeTypesData} />
-        </section>
-      </main>
+            <PokeGrid page={page} pokeTypesData={pokeTypesData} />
+          </section>
+        </main>
+      </>
     );
   }
 }
