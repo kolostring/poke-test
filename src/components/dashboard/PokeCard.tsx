@@ -29,8 +29,8 @@ export function PokeCard({
   const [fetchState, setFetchState] = useState<FetchState>("pending");
 
   useEffect(() => {
-    setFetchState("pending");
     const controller = new AbortController();
+    setFetchState("pending");
 
     fetchPokemon(url, controller.signal)
       .then((res) => {
@@ -92,13 +92,13 @@ export function PokeCard({
         {...props}
         className={cn([
           props.className,
-          'before before:bg-gradient after:bg-shiny-gradient group relative h-full max-h-[532px] w-full max-w-[256px] cursor-pointer overflow-hidden border-none transition-colors before:absolute before:-left-1/3 before:-top-1/4 before:z-10 before:h-48 before:w-[200%] before:rotate-12 before:opacity-20 before:transition-opacity before:content-[""] after:absolute after:-bottom-full after:-left-1/3 after:h-20 after:w-[200%] after:rotate-12 after:bg-opacity-25 after:opacity-0 after:transition-all after:content-[""] hover:bg-green-50 hover:after:-translate-y-[800%] hover:after:translate-x-4 hover:after:opacity-50',
+          'before before:bg-gradient after:bg-shiny-gradient group relative h-full max-h-[532px] w-full max-w-[256px] cursor-pointer overflow-hidden border-none transition-all before:absolute before:-left-1/3 before:-top-1/4 before:z-10 before:h-48 before:w-[200%] before:rotate-12 before:opacity-20 before:transition-opacity before:content-[""] after:absolute after:-bottom-full after:-left-1/3 after:h-20 after:w-[200%] after:rotate-12 after:bg-opacity-25 after:opacity-0 after:transition-all after:content-[""] hover:scale-105 hover:bg-green-50 hover:after:-translate-y-[800%] hover:after:translate-x-4 hover:after:opacity-50',
         ])}
       >
         <CardHeader>
           <div className="relative grid aspect-square w-full place-items-center rounded-md bg-neutral-200 bg-opacity-50">
             <Image
-              className="absolute w-full scale-150 opacity-50 blur-lg brightness-150 saturate-150 transition-transform group-hover:scale-125"
+              className="absolute w-full scale-125 opacity-50 blur-lg brightness-150 saturate-[2] transition-transform group-hover:scale-[2]"
               src={pokeInfo?.pokeimgURL ?? "/"}
               alt={""}
               width={250}
