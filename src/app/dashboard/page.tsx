@@ -77,7 +77,7 @@ export default function DashboardPage() {
                 <PaginationItem className="cursor-pointer">
                   <PaginationPrevious
                     //onClick={() => handlePaginationChange(-3)}
-                    href={`/dashboard/?page=${getNewPagination(-3)}`}
+                    href={`/dashboard/?page=${getNewPagination(-1)}`}
                   />
                 </PaginationItem>
               ) : (
@@ -128,7 +128,7 @@ export default function DashboardPage() {
                 <PaginationItem className="cursor-pointer">
                   <PaginationNext
                     //onClick={() => handlePaginationChange(3)}
-                    href={`/dashboard/?page=${getNewPagination(3)}`}
+                    href={`/dashboard/?page=${getNewPagination(1)}`}
                   />
                 </PaginationItem>
               ) : (
