@@ -10,7 +10,10 @@ type PokeGridProps = {
   page: number;
 };
 
-export default function PokeGrid({ pokeTypesData: pokeTypesData, page }: Readonly<PokeGridProps>) {
+export default function PokeGrid({
+  pokeTypesData,
+  page,
+}: Readonly<PokeGridProps>) {
   const [pokeURLs, setPokeURLs] = useState<PokeURLsData | null>(null);
 
   const [fetchState, setFetchState] = useState<FetchState>("pending");
@@ -36,10 +39,10 @@ export default function PokeGrid({ pokeTypesData: pokeTypesData, page }: Readonl
   }
   if (fetchState === "success") {
     return (
-      <div className="grid grid-cols-5">
+      <div className="mx-auto w-full justify-center place-items-center grid grid-cols-2 bg-display gap-4 md:grid-cols-3 lg:grid-cols-5">
         {pokeURLs?.results.map((poke, index) => (
           <PokeCard
-            className="max-w-[232px]"
+            className="h-[360px] w-[210px]"
             url={poke.url}
             key={index + page * 20 + 1}
             pokeTypesData={pokeTypesData}

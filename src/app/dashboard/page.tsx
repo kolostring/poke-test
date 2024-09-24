@@ -50,7 +50,7 @@ export default function DashboardPage() {
   if (fetchState === "success") {
     return (
       <main>
-        <section className="h-full w-full">
+        <section className="h-full w-full bg-zinc-50">
           <Pagination>
             <PaginationContent>
               <PaginationItem>

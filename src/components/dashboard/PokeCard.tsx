@@ -8,10 +8,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PokeTypeData } from "@/lib/fetchPokeTypes";
-import fetchPokemon, { PokemonInfo } from "@/lib/fetchPokemon";
+import fetchPokemon, { PokemonData } from "@/lib/fetchPokemon";
+import { cn } from "@/lib/utils";
 import { FetchState } from "@/models/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Skeleton } from "../ui/skeleton";
 
 type PokeCardProps = {
   url: string;
@@ -23,7 +25,7 @@ export function PokeCard({
   pokeTypesData,
   ...props
 }: Readonly<PokeCardProps>) {
-  const [pokeInfo, setPokeInfo] = useState<PokemonInfo | null>(null);
+  const [pokeInfo, setPokeInfo] = useState<PokemonData | null>(null);
   const [fetchState, setFetchState] = useState<FetchState>("pending");
 
   useEffect(() => {
@@ -48,48 +50,97 @@ export function PokeCard({
     };
   }, [url]);
 
-  if (fetchState === "pending") {
-    return <div className="bg-yellow-300">Loading... Card</div>;
-  }
-
   if (fetchState === "error") {
     return <div className="bg-red-600">Couldnt load</div>;
   }
 
-  if (fetchState === "success") {
-    const id = pokeInfo?.id ?? undefined;
-    const name = pokeInfo?.name ?? "undefined";
-    const pokeimgURL = pokeInfo?.sprites.front_default ?? "";
-    const height = pokeInfo?.height ?? "undefined";
-    const weight = pokeInfo?.weight ?? "undefined";
-    const types = pokeInfo?.types.map((item) => item.type.name) ?? [
-      "undefined",
-    ];
-
+  if (fetchState === "pending") {
     return (
-      <Card {...props}>
+      <Card
+        {...props}
+        className={cn([
+          props.className,
+          "display-background relative h-full max-h-[532px] w-full max-w-[256px] border-none",
+        ])}
+      >
         <CardHeader>
-          <Image className="mx-auto bg-" src={pokeimgURL} alt={name} width={120} height={120} />
-          <CardDescription className="font-bold">No. {id}</CardDescription>
-          <CardTitle className="capitalize ">{name}</CardTitle>
-          <ul className="grid grid-cols-2">
-            {types.map((type) => (
+          <div className="relative isolate grid aspect-square w-full place-items-center overflow-hidden rounded-md bg-neutral-200 bg-opacity-50">
+            <Skeleton className="h-full w-full" />
+          </div>
+          <Skeleton className="h-[1em] w-[7ch]" />
+
+          <Skeleton className="h-[1em] w-[7ch]" />
+        </CardHeader>
+        <CardContent>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            <Skeleton className="h-[23px]" />
+            <Skeleton className="h-[23px]" />
+          </div>
+
+          <div className="mt-4 flex justify-between font-light text-neutral-500">
+            <Skeleton className="h-[1em] w-[4ch]" />
+            <Skeleton className="h-[1em] w-[4ch]" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (fetchState === "success") {
+    return (
+      <Card
+        {...props}
+        className={cn([
+          props.className,
+          'before before:bg-gradient after:bg-shiny-gradient group relative h-full max-h-[532px] w-full max-w-[256px] cursor-pointer overflow-hidden border-none transition-colors before:absolute before:-left-1/3 before:-top-1/4 before:z-10 before:h-48 before:w-[200%] before:rotate-12 before:opacity-20 before:transition-opacity before:content-[""] after:absolute after:-bottom-full after:-left-1/3 after:h-20 after:w-[200%] after:rotate-12 after:bg-opacity-25 after:opacity-0 after:transition-all after:content-[""] hover:bg-green-50 hover:after:-translate-y-[800%] hover:after:translate-x-4 hover:after:opacity-50',
+        ])}
+      >
+        <CardHeader>
+          <div className="relative grid aspect-square w-full place-items-center rounded-md bg-neutral-200 bg-opacity-50">
+            <Image
+              className="absolute w-full scale-150 opacity-50 blur-lg brightness-150 saturate-150 transition-transform group-hover:scale-125"
+              src={pokeInfo?.pokeimgURL ?? "#"}
+              alt={""}
+              width={250}
+              height={250}
+            />
+            <Image
+              className="z-20 w-full transition-transform group-hover:rotate-6 group-hover:scale-125"
+              src={pokeInfo?.pokeimgURL ?? "#"}
+              alt={pokeInfo?.name ?? "null"}
+              width={250}
+              height={250}
+            />
+          </div>
+          <CardDescription className="font-bold">
+            No. {pokeInfo?.id?.toString().padStart(5, "0")}
+          </CardDescription>
+          <CardTitle className="uppercase">
+            {pokeInfo?.name ?? "undefined"}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="mt-2 grid grid-cols-2 gap-2">
+            {pokeInfo?.types.map((type) => (
               <li key={type}>
                 <Image
-                  src={pokeTypesData.find((value)=>value.name===type)?.imageURL ?? ""}
-                  alt={type}
+                  src={
+                    pokeTypesData.find((value) => value.name === type)
+                      ?.imageURL ?? "#"
+                  }
+                  alt={type ?? "#"}
                   width={200}
-                  height={200}
+                  height={23}
                   className="h-full w-full"
                 />
               </li>
             ))}
           </ul>
-        </CardHeader>
-        <CardContent>
 
-          <p>{height} dm</p>
-          <p>{weight} hg</p>
+          <div className="mt-4 flex justify-between font-light text-neutral-500">
+            <p>{pokeInfo?.height ?? "undefined"} dm</p>
+            <p>{pokeInfo?.weight ?? "undefined"} hg</p>
+          </div>
         </CardContent>
       </Card>
     );
