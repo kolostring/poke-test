@@ -99,14 +99,14 @@ export function PokeCard({
           <div className="relative grid aspect-square w-full place-items-center rounded-md bg-neutral-200 bg-opacity-50">
             <Image
               className="absolute w-full scale-150 opacity-50 blur-lg brightness-150 saturate-150 transition-transform group-hover:scale-125"
-              src={pokeInfo?.pokeimgURL ?? "#"}
+              src={pokeInfo?.pokeimgURL ?? "/"}
               alt={""}
               width={250}
               height={250}
             />
             <Image
               className="z-20 w-full transition-transform group-hover:rotate-6 group-hover:scale-125"
-              src={pokeInfo?.pokeimgURL ?? "#"}
+              src={pokeInfo?.pokeimgURL ?? "/"}
               alt={pokeInfo?.name ?? "null"}
               width={250}
               height={250}
@@ -126,9 +126,9 @@ export function PokeCard({
                 <Image
                   src={
                     pokeTypesData.find((value) => value.name === type)
-                      ?.imageURL ?? "#"
+                      ?.imageURL ?? "/"
                   }
-                  alt={type ?? "#"}
+                  alt={type ?? "undefined"}
                   width={200}
                   height={23}
                   className="h-full w-full"
