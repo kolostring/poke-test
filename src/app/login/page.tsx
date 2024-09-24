@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email().max(50),
@@ -21,7 +22,7 @@ const formSchema = z.object({
 });
 
 export default function LoginPage() {
-  // 1. Define your form.
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,16 +33,14 @@ export default function LoginPage() {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    router.replace("/dashboard");
   }
 
   return (
     <main className="grid place-items-center w-full h-svh">
       <Card className="size-96 p-8">
         <Form {...form}>
-          <h1>Login</h1>
+          <h1 className="font-bold text-xl mb-4">Login</h1>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
@@ -69,7 +68,7 @@ export default function LoginPage() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button className="ml-auto" type="submit">Submit</Button>
           </form>
         </Form>
       </Card>
