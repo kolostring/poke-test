@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import { FetchState } from "@/models/types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
+import PokeCardSkeleton from "./PokeCardSkeleton";
 
 type PokeCardProps = {
   url: string;
@@ -55,35 +55,7 @@ export function PokeCard({
   }
 
   if (fetchState === "pending") {
-    return (
-      <Card
-        {...props}
-        className={cn([
-          props.className,
-          "display-background relative h-full max-h-[532px] w-full max-w-[256px] border-none",
-        ])}
-      >
-        <CardHeader>
-          <div className="relative isolate grid aspect-square w-full place-items-center overflow-hidden rounded-md bg-neutral-200 bg-opacity-50">
-            <Skeleton className="h-full w-full" />
-          </div>
-          <Skeleton className="h-[1em] w-[7ch]" />
-
-          <Skeleton className="h-[1em] w-[7ch]" />
-        </CardHeader>
-        <CardContent>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <Skeleton className="h-[23px]" />
-            <Skeleton className="h-[23px]" />
-          </div>
-
-          <div className="mt-4 flex justify-between font-light text-neutral-500">
-            <Skeleton className="h-[1em] w-[4ch]" />
-            <Skeleton className="h-[1em] w-[4ch]" />
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <PokeCardSkeleton />;
   }
 
   if (fetchState === "success") {
@@ -92,10 +64,10 @@ export function PokeCard({
         {...props}
         className={cn([
           props.className,
-          'before before:bg-gradient after:bg-shiny-gradient group relative h-full max-h-[532px] w-full max-w-[256px] cursor-pointer overflow-hidden border-none transition-all before:absolute before:-left-1/3 before:-top-1/4 before:z-10 before:h-48 before:w-[200%] before:rotate-12 before:opacity-20 before:transition-opacity before:content-[""] after:absolute after:-bottom-full after:-left-1/3 after:h-20 after:w-[200%] after:rotate-12 after:bg-opacity-25 after:opacity-0 after:transition-all after:content-[""] hover:scale-105 hover:bg-green-50 hover:after:-translate-y-[800%] hover:after:translate-x-4 hover:after:opacity-50',
+          'before:bg-gradient after:bg-shiny-gradient group relative flex h-[380px] w-full max-w-[256px] cursor-pointer flex-col overflow-hidden border-none transition-all before:absolute before:-left-1/3 before:-top-1/4 before:z-10 before:h-48 before:w-[200%] before:rotate-12 before:opacity-20 before:transition-opacity before:content-[""] after:absolute after:-bottom-full after:-left-1/3 after:h-20 after:w-[200%] after:rotate-12 after:bg-opacity-25 after:opacity-0 after:transition-all after:content-[""] hover:scale-105 hover:bg-green-50 hover:after:-translate-y-[800%] hover:after:translate-x-4 hover:after:opacity-50',
         ])}
       >
-        <CardHeader>
+        <CardHeader className="pb-0">
           <div className="relative grid aspect-square w-full place-items-center rounded-md bg-neutral-200 bg-opacity-50">
             <Image
               className="absolute w-full scale-125 opacity-50 blur-lg brightness-150 saturate-[2] transition-transform group-hover:scale-[2]"
@@ -119,7 +91,7 @@ export function PokeCard({
             {pokeInfo?.name ?? "undefined"}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="mt-auto">
           <ul className="mt-2 grid grid-cols-2 gap-2">
             {pokeInfo?.types.map((type) => (
               <li key={type}>
@@ -137,7 +109,7 @@ export function PokeCard({
             ))}
           </ul>
 
-          <div className="mt-4 flex justify-between font-light text-neutral-500">
+          <div className="flex justify-between font-light text-neutral-500">
             <p>{pokeInfo?.height ?? "undefined"} dm</p>
             <p>{pokeInfo?.weight ?? "undefined"} hg</p>
           </div>

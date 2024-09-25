@@ -93,7 +93,7 @@ export default function DashboardPage() {
           </Button>
         </aside>
         <main className="bg-zinc-700">
-          <section className="bg-display h-full w-full">
+          <section className="bg-display min-h-dvh w-full">
             <Pagination className="sticky top-0 z-50 mx-auto mb-8 w-fit rounded-b-full bg-white px-8 py-4">
               <PaginationContent className="grid grid-cols-[100px_2rem_2rem_2rem_2rem_2rem_100px]">
                 {page - 1 >= 0 ? (

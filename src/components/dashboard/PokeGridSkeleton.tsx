@@ -1,18 +1,19 @@
-import { Skeleton } from "../ui/skeleton";
+import PokeCardSkeleton from "./PokeCardSkeleton";
 
 export default function PokeGridSkeleton() {
   return (
-    <div className="mx-auto flex flex-wrap w-full place-items-center justify-center gap-4">
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
-      <Skeleton className="h-[360px] w-[256px] bg-white" />
+    <div className="mx-auto flex w-full flex-wrap place-items-center justify-center gap-4">
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+      <PokeCardSkeleton />
+
     </div>
   );
 }
