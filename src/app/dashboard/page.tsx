@@ -15,7 +15,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import fetchPokeURLs from "@/lib/fetchPokeURLs";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import PokeGridSkeleton from "@/components/dashboard/PokeGridSkeleton";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,9 @@ import { logout } from "../actions/auth";
 
 export default function DashboardPage() {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [itemsCount, setItemsCount] = useState(0);
   const [pokeTypesData, setPokeTypesData] = useState<PokeTypeData[]>([]);
 
@@ -53,6 +56,12 @@ export default function DashboardPage() {
 
   const getNewPagination = (delta: number) => {
     return Math.min(Math.max(0, page + delta), Math.floor(itemsCount / 20));
+  };
+
+  const handlePaginationChange = (delta: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", getNewPagination(delta) + "");
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   if (fetchState === "pending") {
@@ -90,8 +99,7 @@ export default function DashboardPage() {
                 {page - 1 >= 0 ? (
                   <PaginationItem className="cursor-pointer">
                     <PaginationPrevious
-                      //onClick={() => handlePaginationChange(-3)}
-                      href={`/dashboard/?page=${getNewPagination(-1)}`}
+                      onClick={() => handlePaginationChange(-1)}
                     />
                   </PaginationItem>
                 ) : (
@@ -106,10 +114,7 @@ export default function DashboardPage() {
                 )}
                 {page - 1 >= 0 ? (
                   <PaginationItem className="cursor-pointer">
-                    <PaginationLink
-                      //onClick={() => handlePaginationChange(-1)}
-                      href={`/dashboard/?page=${getNewPagination(-1)}`}
-                    >
+                    <PaginationLink onClick={() => handlePaginationChange(-1)}>
                       {page}
                     </PaginationLink>
                   </PaginationItem>
@@ -121,10 +126,7 @@ export default function DashboardPage() {
                 </PaginationItem>
                 {page + 1 <= itemsCount / 20 ? (
                   <PaginationItem className="cursor-pointer">
-                    <PaginationLink
-                      // onClick={() => handlePaginationChange(1)}
-                      href={`/dashboard/?page=${getNewPagination(1)}`}
-                    >
+                    <PaginationLink onClick={() => handlePaginationChange(1)}>
                       {page + 2}
                     </PaginationLink>
                   </PaginationItem>
@@ -140,10 +142,7 @@ export default function DashboardPage() {
                 )}
                 {page + 1 <= itemsCount / 20 ? (
                   <PaginationItem className="cursor-pointer">
-                    <PaginationNext
-                      //onClick={() => handlePaginationChange(3)}
-                      href={`/dashboard/?page=${getNewPagination(1)}`}
-                    />
+                    <PaginationNext onClick={() => handlePaginationChange(1)} />
                   </PaginationItem>
                 ) : (
                   <span></span>
